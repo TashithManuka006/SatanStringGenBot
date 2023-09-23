@@ -31,7 +31,7 @@ from telethon.sessions import StringSession
 from telethon.tl.functions.channels import JoinChannelRequest
 from pyromod.listen.listen import ListenerTimeout
 
-from config import SUPPORT_CHAT
+from config import SUPPORT_CHAT, API_HASH, API_ID
 from StringGen import Anony
 from StringGen.utils import retry_key
 
@@ -48,57 +48,8 @@ async def gen_session(
 
     await message.reply_text(f"» ᴛʀʏɪɴɢ ᴛᴏ sᴛᴀʀᴛ {ty} sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ...")
 
-    try:
-        api_id = await Anony.ask(
-            identifier=(message.chat.id, user_id, None),
-            text="» ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ʏᴏᴜʀ ᴀᴘɪ ɪᴅ ᴛᴏ ᴘʀᴏᴄᴇᴇᴅ :",
-            filters=filters.text,
-            timeout=300,
-        )
-    except ListenerTimeout:
-        return await Anony.send_message(
-            user_id,
-            "» ᴛɪᴍᴇᴅ ʟɪᴍɪᴛ ʀᴇᴀᴄʜᴇᴅ ᴏғ 5 ᴍɪɴᴜᴛᴇs.\n\nᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ɢᴇɴᴇʀᴀᴛɪɴɢ sᴇssɪᴏɴ ᴀɢᴀɪɴ.",
-            reply_markup=retry_key,
-        )
-
-    if await cancelled(api_id):
-        return
-
-    try:
-        api_id = int(api_id.text)
-    except ValueError:
-        return await Anony.send_message(
-            user_id,
-            "» ᴛʜᴇ ᴀᴘɪ ɪᴅ ʏᴏᴜ'ᴠᴇ sᴇɴᴛ ɪs ɪɴᴠᴀʟɪᴅ.\n\nᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ɢᴇɴᴇʀᴀᴛɪɴɢ sᴇssɪᴏɴ ᴀɢᴀɪɴ.",
-            reply_markup=retry_key,
-        )
-
-    try:
-        api_hash = await Anony.ask(
-            identifier=(message.chat.id, user_id, None),
-            text="» ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ʏᴏᴜʀ ᴀᴘɪ ʜᴀsʜ ᴛᴏ ᴘʀᴏᴄᴇᴇᴅ :",
-            filters=filters.text,
-            timeout=300,
-        )
-    except ListenerTimeout:
-        return await Anony.send_message(
-            user_id,
-            "» ᴛɪᴍᴇᴅ ʟɪᴍɪᴛ ʀᴇᴀᴄʜᴇᴅ ᴏғ 5 ᴍɪɴᴜᴛᴇs.\n\nᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ɢᴇɴᴇʀᴀᴛɪɴɢ sᴇssɪᴏɴ ᴀɢᴀɪɴ.",
-            reply_markup=retry_key,
-        )
-
-    if await cancelled(api_hash):
-        return
-
-    api_hash = api_hash.text
-
-    if len(api_hash) < 30:
-        return await Anony.send_message(
-            user_id,
-            "» ᴛʜᴇ ᴀᴘɪ ʜᴀsʜ ʏᴏᴜ'ᴠᴇ sᴇɴᴛ ɪs ɪɴᴠᴀʟɪᴅ.\n\nᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ɢᴇɴᴇʀᴀᴛɪɴɢ sᴇssɪᴏɴ ᴀɢᴀɪɴ.",
-            reply_markup=retry_key,
-        )
+    api_id = API_ID
+    api_hash = API_HASH
 
     try:
         phone_number = await Anony.ask(
